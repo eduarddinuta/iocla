@@ -14,16 +14,20 @@ main:
 
     mov ecx, [num]     ; Use ecx as counter for computing the sum.
     xor eax, eax       ; Use eax to store the sum. Start from 0.
+    xor ebx, ebx
 
 add_to_sum:
-    add eax, ecx
+    mov eax, ecx
+    mov edx, ecx
+    mul edx
+    add ebx, eax
     loop add_to_sum    ; Decrement ecx. If not zero, add it to sum.
 
     mov ecx, [num]
     PRINTF32 `%s\x0`, print_format1
     PRINTF32 `%u\x0`, ecx
     PRINTF32 `%s\x0`, print_format2
-    PRINTF32 `%u\n\x0`, eax
+    PRINTF32 `%u\n\x0`, ebx
 
     xor eax, eax
     leave

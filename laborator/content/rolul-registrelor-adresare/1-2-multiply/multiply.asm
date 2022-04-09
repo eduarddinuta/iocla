@@ -31,6 +31,24 @@ main:
 
 
    ; TODO: Implement multiplication for dw and dd data types.
+    mov ax, word [num1_w]
+    mov bx, word [num2_w]
+    mul bx
 
+    PRINTF32 `%s\x0`, print_mesaj
+    xor ebx, ebx
+    shl edx, 16
+    mov dx, ax
+    PRINTF32 `%x\n\x0`, edx
+    
+    mov eax, dword [num1_d]
+    mov ebx, dword [num2_d]
+    mul ebx
+
+    PRINTF32 `%s\x0`, print_mesaj
+    xor ebx, ebx
+    PRINTF32 `%x%x\n\x0`, edx, eax
+
+    xor eax, eax
     leave
     ret
