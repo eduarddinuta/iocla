@@ -20,9 +20,18 @@ main:
     ; TODO: calculate the sum of first N fibonacci numbers
     ;       (f(0) = 0, f(1) = 1)
     xor eax, eax     ;store the sum in eax
-
+    mov ebx, 1
+    mov ecx, [N]
+    push 0;
+fibosum:
+    add eax, ebx
+    pop edx
+    add edx, ebx
+    push ebx
+    mov ebx, edx
+loop fibosum;
     ; use loop instruction
-
+    
     push eax
     push print_format_2
     call printf

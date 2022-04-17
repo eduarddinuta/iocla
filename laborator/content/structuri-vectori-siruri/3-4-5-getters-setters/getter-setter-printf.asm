@@ -38,7 +38,8 @@ get_int:
     ; The first argument is a pointer to the beginning of the structure, so you
     ; must use it to calculate the actual address of the data you want to get.
     ; TODO --- move the int's value to `eax` to return it
-
+    mov ebx, [ebp + 8]
+    mov eax, dword[ebx + int_x]
     ; Instructions used to clear the function stack frame and return to the
     ; caller functions. Do not modify them.
     leave
@@ -56,7 +57,8 @@ get_char:
     ; The first argument is a pointer to the beginning of the structure, so you
     ; must use it to calculate the actual address of the data you want to get.
     ; TODO --- move the char's value to `eax` to return it.
-
+    mov ebx, [ebp + 8]
+    mov al, byte[ebx + char_y]
     ; Instructions used to clear the function stack frame and return to the
     ; caller functions. Do not modify them.
     leave
@@ -74,7 +76,8 @@ get_string:
     ; The first argument is a pointer to the beginning of the structure, so you
     ; must use it to calculate the actual address of the data you want to get.
     ; TODO --- move the string's address to `eax` to return it.
-
+    mov ebx, [ebp + 8]
+    lea eax, [ebx + string_s]
     ; Instructions used to clear the function stack frame and return to the
     ; caller functions. Do not modify them.
     leave
@@ -91,7 +94,9 @@ set_int:
 
     ; The first argument is a pointer to the beginning of the structure, so you
     ; must use it to calculate the actual address of the data you want to set.
-
+    mov ebx, [ebp + 8]
+    mov ecx, [ebp + 12]
+    mov [ebx + int_x], ecx
     ; Instructions used to clear the function stack frame and return to the
     ; caller functions. Do not modify them.
     leave
@@ -108,7 +113,9 @@ set_char:
 
     ; The first argument is a pointer to the beginning of the structure, so you
     ; must use it to calculate the actual address of the data you want to set.
-
+    mov ebx, [ebp + 8]
+    mov ecx, [ebp + 12]
+    mov byte[ebx + char_y], cl
     ; Instructions used to clear the function stack frame and return to the
     ; caller functions. Do not modify them.
     leave
@@ -125,7 +132,22 @@ set_string:
 
     ; The first argument is a pointer to the beginning of the structure, so you
     ; must use it to calculate the actual address of the data you want to set.
-
+    mov ebx, [ebp + 8]
+    mov ecx, [ebp + 12]
+    lea eax, [ebx + string_s]
+    mov ebx, 14
+    ; nu sunt sigur de ce merge asta sau daca se poate mai bine
+    ; cum as putea sa copiez direct tot si nu caracter cu caracter?
+copy:
+    cmp ebx, 0
+    jne bobu
+    jmp final
+bobu:
+    mov dl, byte[ecx + ebx - 1] 
+    mov byte[eax + ebx - 1], dl
+    dec ebx
+    jmp copy
+final:
     ; Instructions used to clear the function stack frame and return to the
     ; caller functions. Do not modify them.
     leave
@@ -146,10 +168,10 @@ main:
     add esp, 4
 
     ;uncomment when get_int is ready
-    ;push eax
-    ;push int_format
-    ;call printf
-    ;add esp, 8
+    push eax
+    push int_format
+    call printf
+    add esp, 8
 
     movzx edx, byte [new_char]
     ; movzx is the same as
@@ -165,10 +187,10 @@ main:
     add esp, 4
 
     ;uncomment when get_char is ready
-    ;push eax
-    ;push char_format
-    ;call printf
-    ;add esp, 8
+    push eax
+    push char_format
+    call printf
+    add esp, 8
 
     mov edx, new_string
     push edx
@@ -181,11 +203,28 @@ main:
     add esp, 4
 
     ;uncomment when get_string is ready
-    ;push eax
-    ;push string_format
-    ;call printf
-    ;add esp, 8
+    push eax
+    push string_format
+    call printf
+    add esp, 8
 
+    mov eax, dword[sample_obj + int_x]
+    push eax
+    push int_format
+    call printf
+    add esp, 8
+
+    mov al, byte[sample_obj + char_y]
+    push eax
+    push char_format
+    call printf
+    add esp, 8
+
+    lea eax, [sample_obj + string_s]
+    push eax
+    push string_format
+    call printf
+    add esp, 8
     xor eax, eax
     leave
     ret
