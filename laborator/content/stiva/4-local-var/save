@@ -22,8 +22,8 @@ main:
     mov ecx, 0 ; counter used for the output array
 
 merge_arrays:
-    mov dl, byte [array_1 + eax]
-    mov dh, byte [array_2 + ebx]
+    mov dl, byte [esp + eax]
+    mov dh, byte [esp + ebx]
     cmp dl, dh
     jg array_2_lower
 array_1_lower:
